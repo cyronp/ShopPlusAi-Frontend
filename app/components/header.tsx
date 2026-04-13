@@ -1,13 +1,19 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ChevronDown, ShoppingCartIcon, User } from "lucide-react";
+import { ChevronDown, ChevronUp, ShoppingCartIcon, User } from "lucide-react";
+import UserModal from "./user-modal";
 
 export default function Header() {
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+
   return (
     <>
       <div className="grid grid-cols-3 items-center border-b py-4">
         {/* Icon */}
         <div className="flex gap-2 px-12">
-          <ShoppingCartIcon className="mt-0.5" size={24} />
+          <ShoppingCartIcon className="mt-1" size={24} />
           <h1 className="text-2xl">
             ShopPlus <span className="text-[#32b1d0]">AI</span>
           </h1>
@@ -28,12 +34,19 @@ export default function Header() {
             variant="ghost"
             size="lg"
             className="rounded-full border border-neutral-300 cursor-pointer"
+            onClick={() => setIsUserModalOpen((prev) => !prev)}
+            aria-expanded={isUserModalOpen}
+            aria-haspopup="dialog"
           >
             <User />
-            <ChevronDown />
+            {isUserModalOpen ? <ChevronUp /> : <ChevronDown />}
           </Button>
         </div>
       </div>
+      <UserModal
+        open={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+      />
     </>
   );
 }
