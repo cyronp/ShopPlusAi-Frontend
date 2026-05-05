@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { AlertTriangle, Brain, Clock, X } from "lucide-react";
+import { Button } from "@/app/components/ui/button";
+import { Brain, Clock, ScanFace, X } from "lucide-react";
 
 type UserModalProps = {
   open: boolean;
@@ -32,27 +32,33 @@ export default function UserModal({ open, onClose }: UserModalProps) {
         </div>
 
         <div className="mt-1 flex flex-col">
-          <button
+          <Button
             type="button"
-            className="inline-flex cursor-pointer items-center gap-2 border-b p-2 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
+            variant="ghost"
+            size="lg"
+            className="w-full justify-start cursor-pointer gap-2 border-b px-2 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
           >
-            <Brain size={16} className="text-neutral-500" />
+            <Brain size={24} className="text-neutral-500" />
             Insight de sentimento
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="inline-flex cursor-pointer items-center gap-2 border-b px-2 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
+            variant="ghost"
+            size="lg"
+            className="w-full justify-start cursor-pointer items-center gap-2 border-b px-2 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
           >
-            <AlertTriangle size={16} className="text-neutral-500" />
-            Principais problemas
-          </button>
-          <button
+            <ScanFace size={24} className="text-neutral-500" />
+            Insight customizado
+          </Button>
+          <Button
             type="button"
-            className="inline-flex cursor-pointer items-center gap-2 px-2 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
+            variant="ghost"
+            size="lg"
+            className="w-full justify-start cursor-pointer items-center gap-2 px-2 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
           >
-            <Clock size={16} className="text-neutral-500" />
+            <Clock size={24} className="text-neutral-500" />
             Histórico
-          </button>
+          </Button>
         </div>
       </div>
     </div>
