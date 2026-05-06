@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/app/components/ui/button";
-import { ChevronDown, ChevronUp, ShoppingCartIcon, User } from "lucide-react";
+import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import UserModal from "./user-modal";
 import { Input } from "./ui/input";
 import { cn } from "@/app/lib/utils";
@@ -52,7 +52,7 @@ export default function Header() {
             aria-expanded={isUserModalOpen}
             aria-haspopup="dialog"
           >
-            <User />
+            <Sparkles/>
             {isUserModalOpen ? <ChevronUp /> : <ChevronDown />}
           </Button>
         </div>
