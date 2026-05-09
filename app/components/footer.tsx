@@ -11,7 +11,7 @@ export default function Footer() {
           <p className="uppercase text-sm tracking-tight">Construido por: Vitor Henrique, Caio de Souza, Mathias, Carlos Deretti</p>
         </div>
         <div className="flex flex-row gap-2">
-          <p>Acesse nossos repositórios:</p>
+          <span>Acesse nossos repositórios:</span>
           <a href="https://github.com/cyronp/ShopPlusAi-Frontend" target="_blank">Front-end</a>
           <a href="https://github.com/cyronp/ShopPlusAi-Backend" target="_blank">Back-end</a>
         </div>

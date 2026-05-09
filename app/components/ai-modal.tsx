@@ -3,12 +3,12 @@
 import { Button } from "@/app/components/ui/button";
 import { Brain, Clock, ScanFace, X } from "lucide-react";
 
-type UserModalProps = {
+type AiModalProps = {
   open: boolean;
   onClose: () => void;
 };
 
-export default function UserModal({ open, onClose }: UserModalProps) {
+export default function AiModal({ open, onClose }: AiModalProps) {
   if (!open) return null;
 
   return (
@@ -41,15 +41,17 @@ export default function UserModal({ open, onClose }: UserModalProps) {
             <Brain size={24} className="text-neutral-500" />
             Insight de sentimento
           </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="lg"
-            className="w-full justify-start cursor-pointer items-center gap-2 border-b px-2 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
-          >
-            <ScanFace size={24} className="text-neutral-500" />
-            Insight customizado
-          </Button>
+          <a href="/custom-prompt">
+            <Button
+              type="button"
+              variant="ghost"
+              size="lg"
+              className="w-full justify-start cursor-pointer items-center gap-2 border-b px-2 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
+            >
+              <ScanFace size={24} className="text-neutral-500" />
+              Insight customizado
+            </Button>
+          </a>
           <Button
             type="button"
             variant="ghost"

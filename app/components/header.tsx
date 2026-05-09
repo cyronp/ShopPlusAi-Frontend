@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/app/components/ui/button";
 import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
-import UserModal from "./user-modal";
+import UserModal from "./ai-modal";
 import { Input } from "./ui/input";
 import { cn } from "@/app/lib/utils";
 import SearchInput from "./search";
