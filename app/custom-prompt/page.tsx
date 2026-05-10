@@ -37,15 +37,17 @@ export default function CustomPrompt() {
     <>
       <div className="flex w-full min-h-[calc(100vh-73px)] justify-center items-center">
         <div className="flex flex-col gap-2 items-center w-full max-w-3xl px-4">
-          <h2 className="text-3xl text-center font-semibold">
-            Oque deseja descobrir sobre sua loja?
-          </h2>
-          <h3
-            key={hintText}
-            className="text-md text-center text-muted-foreground moveUpBlur"
-          >
-            {hintText}
-          </h3>
+          <div className="flex flex-col gap-4">
+            <h2 className="text-4xl text-center font-semibold text-amethyst-smoke-900">
+              Oque deseja descobrir sobre sua loja?
+            </h2>
+            <h3
+              key={hintText}
+              className="text-md text-center text-amethyst-smoke-600 moveUpBlur"
+            >
+              {hintText}
+            </h3>
+          </div>
           <InputGroup className="bg-white z-10 w-full">
             <InputGroupTextarea
               placeholder="Pergunte qualquer coisa"
@@ -59,7 +61,7 @@ export default function CustomPrompt() {
                 {maxCharacters} caracteres restantes
               </InputGroupText>
               <InputGroupButton
-                className="ml-auto text-black cursor-pointer"
+                className="ml-auto text-white bg-amethyst-smoke-700 cursor-pointer"
                 size="sm"
                 variant="outline"
               >

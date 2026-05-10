@@ -19,7 +19,7 @@ export default function Header() {
         {/* Icon */}
         <div className="flex px-12">
           <h1 className="text-2xl tracking-tighter">
-            SHOPLUS <span className="text-[#32b1d0]">AI</span>
+            <a href="/">SHOPLUS <span className="text-amethyst-smoke-700">AI</span></a>
           </h1>
         </div>
         {/* Categories */}
@@ -29,9 +29,9 @@ export default function Header() {
               <li
                 key={index}
                 className={cn(
-                  "tracking-tight",
+                  "tracking-tight text-amethyst-smoke-600",
                   isActive === index
-                    ? "text-sky-700 underline decoration-2 decoration-sky-700 font-semibold underline-offset-6"
+                    ? "text-amethyst-smoke-900 underline decoration-2 decoration-amethyst-smoke-900 font-semibold underline-offset-6"
                     : "",
                 )}
                 onClick={() => setIsActive(index)}

@@ -45,6 +45,28 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-amethyst-smoke-50: var(--color-amethyst-smoke-50);
+  --color-amethyst-smoke-100: var(--color-amethyst-smoke-100);
+  --color-amethyst-smoke-200: var(--color-amethyst-smoke-200);
+  --color-amethyst-smoke-300: var(--color-amethyst-smoke-300);
+  --color-amethyst-smoke-400: var(--color-amethyst-smoke-400);
+  --color-amethyst-smoke-500: var(--color-amethyst-smoke-500);
+  --color-amethyst-smoke-600: var(--color-amethyst-smoke-600);
+  --color-amethyst-smoke-700: var(--color-amethyst-smoke-700);
+  --color-amethyst-smoke-800: var(--color-amethyst-smoke-800);
+  --color-amethyst-smoke-900: var(--color-amethyst-smoke-900);
+  --color-amethyst-smoke-950: var(--color-amethyst-smoke-950);
+  --color-lime-green-50: var(--color-lime-green-50);
+  --color-lime-green-100: var(--color-lime-green-100);
+  --color-lime-green-200: var(--color-lime-green-200);
+  --color-lime-green-300: var(--color-lime-green-300);
+  --color-lime-green-400: var(--color-lime-green-400);
+  --color-lime-green-500: var(--color-lime-green-500);
+  --color-lime-green-600: var(--color-lime-green-600);
+  --color-lime-green-700: var(--color-lime-green-700);
+  --color-lime-green-800: var(--color-lime-green-800);
+  --color-lime-green-900: var(--color-lime-green-900);
+  --color-lime-green-950: var(--color-lime-green-950);
 }
 
 :root {
@@ -80,6 +102,28 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --color-amethyst-smoke-50: #f8f7fb;
+  --color-amethyst-smoke-100: #f2f1f6;
+  --color-amethyst-smoke-200: #e7e4f0;
+  --color-amethyst-smoke-300: #d5cfe3;
+  --color-amethyst-smoke-400: #beb3d2;
+  --color-amethyst-smoke-500: #9c89b8;
+  --color-amethyst-smoke-600: #927bac;
+  --color-amethyst-smoke-700: #806899;
+  --color-amethyst-smoke-800: #6b5780;
+  --color-amethyst-smoke-900: #59486a;
+  --color-amethyst-smoke-950: #392f46;
+  --color-lime-green-50: #f7fee2;
+  --color-lime-green-100: #edfcc6;
+  --color-lime-green-200: #d5f791;
+  --color-lime-green-300: #b3f15b;
+  --color-lime-green-400: #9aed32;
+  --color-lime-green-500: #84cc16;
+  --color-lime-green-600: #65a30d;
+  --color-lime-green-700: #4d7c0f;
+  --color-lime-green-800: #3f6212;
+  --color-lime-green-900: #365314;
+  --color-lime-green-950: #1a2e05;
 }
 
 .dark {
