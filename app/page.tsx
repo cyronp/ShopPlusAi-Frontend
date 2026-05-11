@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Modal from "./components/user-modal";
+import Modal from "./components/ai-modal";
 import Card from "./components/card";
 import Footer from "./components/footer";
 
