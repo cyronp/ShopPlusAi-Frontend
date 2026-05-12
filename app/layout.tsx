@@ -21,9 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${fredoka.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-background ">
+      <body
+        className="min-h-full flex flex-col bg-background"
+        style={{ "--header-height": "0px" } as React.CSSProperties}
+      >
         <Header />
-        {children}
+        <main className="flex-1 flex flex-col">{children}</main>
       </body>
     </html>
   );

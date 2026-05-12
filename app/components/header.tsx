@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/app/components/ui/button";
 import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import UserModal from "./ai-modal";
@@ -11,19 +11,41 @@ import SearchInput from "./search";
 export default function Header() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isActive, setIsActive] = useState(0);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight;
+        document.documentElement.style.setProperty(
+          "--header-height",
+          `${height}px`,
+        );
+      }
+    };
+
+    updateHeaderHeight();
+    window.addEventListener("resize", updateHeaderHeight);
+    return () => window.removeEventListener("resize", updateHeaderHeight);
+  }, []);
 
   const categories = ["Todos", "Roupas", "Bebidas", "Alimentos", "Automotivo"];
   return (
     <>
-      <div className="grid grid-cols-3 items-center border-b py-4">
+      <header
+        ref={headerRef}
+        className="grid grid-cols-3 items-center border-b py-4"
+      >
         {/* Icon */}
         <div className="flex px-12">
           <h1 className="text-2xl tracking-tighter">
-            <a href="/">SHOPLUS <span className="text-amethyst-smoke-700">AI</span></a>
+            <a href="/">
+              SHOPLUS <span className="text-amethyst-smoke-700">AI</span>
+            </a>
           </h1>
         </div>
         {/* Categories */}
-        <div className="flex justify-center">
+        <nav className="flex justify-center">
           <ul className="inline-flex gap-6 cursor-pointer *:hover:bg-neutral-100 transition-all *:p-1 *:rounded-md">
             {categories.map((category, index) => (
               <li
@@ -40,7 +62,7 @@ export default function Header() {
               </li>
             ))}
           </ul>
-        </div>
+        </nav>
         {/* Admin Section */}
         <div className="flex justify-end px-12 gap-6">
           <SearchInput />
@@ -52,11 +74,11 @@ export default function Header() {
             aria-expanded={isUserModalOpen}
             aria-haspopup="dialog"
           >
-            <Sparkles/>
+            <Sparkles />
             {isUserModalOpen ? <ChevronUp /> : <ChevronDown />}
           </Button>
         </div>
-      </div>
+      </header>
       <UserModal
         open={isUserModalOpen}
         onClose={() => setIsUserModalOpen(false)}
