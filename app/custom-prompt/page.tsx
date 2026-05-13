@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Input } from "../components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
@@ -9,6 +8,7 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "../components/ui/input-group";
+import { SidebarTrigger } from "../components/ui/sidebar";
 
 const textMapping = [
   "Quais os meus melhores itens?",
@@ -34,43 +34,44 @@ export default function CustomPrompt() {
   }, []);
 
   return (
-    <>
-      <div className="flex w-full min-h-[calc(100vh-73px)] justify-center items-center">
-        <div className="flex flex-col gap-2 items-center w-full max-w-3xl px-4">
-          <div className="flex flex-col gap-4">
-            <h2 className="text-4xl text-center font-semibold text-amethyst-smoke-900">
-              Oque deseja descobrir sobre sua loja?
-            </h2>
-            <h3
-              key={hintText}
-              className="text-md text-center text-amethyst-smoke-600 moveUpBlur"
-            >
-              {hintText}
-            </h3>
-          </div>
-          <InputGroup className="bg-white z-10 w-full">
-            <InputGroupTextarea
-              placeholder="Pergunte qualquer coisa"
-              value={inputValue}
-              onChange={(e) => {
-                setInputValue(e.target.value);
-              }}
-            />
-            <InputGroupAddon align="block-end">
-              <InputGroupText className="text-xs text-muted-foreground">
-                {maxCharacters} caracteres restantes
-              </InputGroupText>
-              <InputGroupButton
-                className="ml-auto text-white bg-amethyst-smoke-700 cursor-pointer"
-                size="sm"
-                variant="outline"
-              >
-                Enviar
-              </InputGroupButton>
-            </InputGroupAddon>
-          </InputGroup>
+    <div className="flex w-full min-h-full justify-center items-center">
+      <div className="flex flex-col gap-2 items-center w-full max-w-3xl px-4">
+        <div className="flex w-full justify-start md:hidden">
+          <SidebarTrigger className="h-9 w-9" />
         </div>
+        <div className="flex flex-col gap-4">
+          <h2 className="text-4xl text-center font-semibold text-amethyst-smoke-900">
+            Oque deseja descobrir sobre sua loja?
+          </h2>
+          <h3
+            key={hintText}
+            className="text-md text-center text-amethyst-smoke-600 moveUpBlur"
+          >
+            {hintText}
+          </h3>
+        </div>
+        <InputGroup className="bg-white z-10 w-full">
+          <InputGroupTextarea
+            placeholder="Pergunte qualquer coisa"
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+            }}
+          />
+          <InputGroupAddon align="block-end">
+            <InputGroupText className="text-xs text-muted-foreground">
+              {maxCharacters} caracteres restantes
+            </InputGroupText>
+            <InputGroupButton
+              className="ml-auto text-white bg-amethyst-smoke-700 cursor-pointer"
+              size="sm"
+              variant="outline"
+            >
+              Enviar
+            </InputGroupButton>
+          </InputGroupAddon>
+        </InputGroup>
       </div>
-    </>
+    </div>
   );
 }

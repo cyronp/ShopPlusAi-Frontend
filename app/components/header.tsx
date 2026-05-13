@@ -34,7 +34,7 @@ export default function Header() {
     <>
       <header
         ref={headerRef}
-        className="grid grid-cols-3 items-center border-b py-4"
+        className="grid w-full grid-cols-3 items-center border-b py-4"
       >
         {/* Icon */}
         <div className="flex px-12">

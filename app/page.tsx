@@ -6,7 +6,7 @@ import Footer from "./components/footer";
 export default function Home() {
   return (
     <>
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-full flex-col">
         <div>
           <Card />
         </div>

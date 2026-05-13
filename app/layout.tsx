@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
 import "./globals.css";
-import Header from "./components/header";
+import AppShell from "./components/app-shell";
 
 const fredoka = Fredoka({
   variable: "--font-fredoka",
@@ -22,11 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fredoka.variable} h-full antialiased`}>
       <body
-        className="min-h-full flex flex-col bg-background"
+        className="bg-background"
         style={{ "--header-height": "0px" } as React.CSSProperties}
       >
-        <Header />
-        <main className="flex-1 flex flex-col">{children}</main>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
