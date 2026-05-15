@@ -52,15 +52,6 @@ export default function AiModal({ open, onClose }: AiModalProps) {
               Insight customizado
             </Button>
           </a>
-          <Button
-            type="button"
-            variant="ghost"
-            size="lg"
-            className="w-full justify-start cursor-pointer items-center gap-2 px-2 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
-          >
-            <Clock size={24} className="text-neutral-500" />
-            Histórico
-          </Button>
         </div>
       </div>
     </div>

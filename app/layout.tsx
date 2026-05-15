@@ -20,9 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${figtree.variable} h-full antialiased`}>
-      <body className="bg-background">
+      <body className="bg-background flex min-h-screen flex-col">
         <Header />
-        <main>{children}</main>
+        <main
+          className="flex flex-1 flex-col"
+          style={{ paddingTop: "var(--header-height, 0px)" }}
+        >
+          {children}
+        </main>
       </body>
     </html>
   );
