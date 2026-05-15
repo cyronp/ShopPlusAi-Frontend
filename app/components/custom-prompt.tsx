@@ -10,6 +10,10 @@ import {
 } from "../components/ui/input-group";
 import { BotMessageSquareIcon, MicIcon } from "lucide-react";
 import Typewriter from "typewriter-effect";
+import {
+  isSpeechRecognitionSupported,
+  SpeechToText,
+} from "../utils/speech-to-text";
 
 const textMapping = [
   "Quais os meus melhores itens?",
@@ -26,8 +30,12 @@ export default function CustomPrompt() {
     { role: "user" | "assistant"; text: string }[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeechSupported, setIsSpeechSupported] = useState(false);
   const maxCharacters = 120 - inputValue.length;
   const indexRef = useRef(0);
+  const sttRef = useRef<SpeechToText | null>(null);
+  const baseInputRef = useRef("");
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -36,6 +44,31 @@ export default function CustomPrompt() {
     }, 3000);
 
     return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const supported = isSpeechRecognitionSupported();
+    setIsSpeechSupported(supported);
+
+    if (!supported) return;
+
+    const stt = new SpeechToText("pt-BR", {
+      onTranscript: (final, interim) => {
+        const combined =
+          `${baseInputRef.current}${final}${interim}`.trimStart();
+        setInputValue(combined);
+      },
+      onStart: () => setIsListening(true),
+      onEnd: () => setIsListening(false),
+      onError: () => setIsListening(false),
+    });
+
+    sttRef.current = stt;
+
+    return () => {
+      stt.stop();
+      sttRef.current = null;
+    };
   }, []);
 
   return (
@@ -160,8 +193,34 @@ export default function CustomPrompt() {
               className="cursor-pointer"
               size="icon-sm"
               variant="ghost"
+              disabled={!isSpeechSupported}
+              aria-pressed={isListening}
+              title={
+                isSpeechSupported
+                  ? isListening
+                    ? "Parar gravacao"
+                    : "Falar agora"
+                  : "Navegador sem suporte a reconhecimento de voz"
+              }
+              onClick={() => {
+                if (!isSpeechSupported || !sttRef.current) return;
+
+                if (isListening) {
+                  sttRef.current.stop();
+                  return;
+                }
+
+                baseInputRef.current = inputValue.trim()
+                  ? `${inputValue.trim()} `
+                  : "";
+                sttRef.current.clear();
+                sttRef.current.start();
+              }}
             >
-              <MicIcon size={32} />
+              <MicIcon
+                size={32}
+                className={isListening ? "text-amethyst-smoke-700" : undefined}
+              />
             </InputGroupButton>
           </InputGroupAddon>
         </InputGroup>
