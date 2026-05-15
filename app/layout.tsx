@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Fredoka } from "next/font/google";
+import { Figtree } from "next/font/google";
 import "./globals.css";
-import AppShell from "./components/app-shell";
+import Header from "./components/header";
 
-const fredoka = Fredoka({
-  variable: "--font-fredoka",
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -20,12 +19,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fredoka.variable} h-full antialiased`}>
-      <body
-        className="bg-background"
-        style={{ "--header-height": "0px" } as React.CSSProperties}
-      >
-        <AppShell>{children}</AppShell>
+    <html lang="en" className={`${figtree.variable} h-full antialiased`}>
+      <body className="bg-background">
+        <Header />
+        <main>{children}</main>
       </body>
     </html>
   );

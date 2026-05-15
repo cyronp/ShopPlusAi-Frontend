@@ -8,7 +8,6 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "../components/ui/input-group";
-import { SidebarTrigger } from "../components/ui/sidebar";
 
 const textMapping = [
   "Quais os meus melhores itens?",
@@ -36,9 +35,6 @@ export default function CustomPrompt() {
   return (
     <div className="flex w-full min-h-full justify-center items-center">
       <div className="flex flex-col gap-2 items-center w-full max-w-3xl px-4">
-        <div className="flex w-full justify-start md:hidden">
-          <SidebarTrigger className="h-9 w-9" />
-        </div>
         <div className="flex flex-col gap-4">
           <h2 className="text-4xl text-center font-semibold text-amethyst-smoke-900">
             Oque deseja descobrir sobre sua loja?
