@@ -32,15 +32,18 @@ export default function AiModal({ open, onClose }: AiModalProps) {
         </div>
 
         <div className="mt-1 flex flex-col">
+          <a href="/insight">
+
           <Button
             type="button"
             variant="ghost"
             size="lg"
             className="w-full justify-start cursor-pointer gap-2 border-b px-2 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-100"
-          >
+            >
             <Brain size={24} className="text-neutral-500" />
             Insight de sentimento
           </Button>
+            </a>
           <a href="/custom-prompt">
             <Button
               type="button"
