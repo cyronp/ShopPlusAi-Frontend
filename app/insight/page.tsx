@@ -8,9 +8,9 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/app/components/ui/chart";
-import { Astroid, Heart, InfoIcon, Star } from "lucide-react";
+import { Astroid, Heart, InfoIcon } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Separator } from "../components/ui/separator";
 import {
   Select,
@@ -22,9 +22,45 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { Button } from "../components/ui/button";
-const sentimentData = [
-  { month: "Jun", positive: 1700, neutral: 1100, negative: 320 },
-];
+import { apiFetch } from "../lib/api";
+
+type FeelingResponse = {
+  resumo: {
+    descricao: string;
+  };
+  sentimentChart: Array<{
+    positive: number;
+    neutral: number;
+    negative: number;
+  }>;
+  mediaSentimento: {
+    nota: number;
+  };
+  melhorProduto: {
+    nome: string;
+    categoria: string;
+    sentimento: string;
+    media: number;
+    comentarioDestaque: string;
+  };
+  piorProduto: {
+    nome: string;
+    categoria: string;
+    sentimento: string;
+    media: number;
+    comentarioDestaque: string;
+  };
+  aspectos: Array<{
+    aspecto: string;
+    sentimento: string;
+  }>;
+};
+
+type AvaliacoesResponse = {
+  content: Array<{
+    data: string;
+  }>;
+};
 
 const months = [
   "Janeiro",
@@ -48,8 +84,93 @@ const sentimentChartConfig = {
 } satisfies ChartConfig;
 
 export default function Page() {
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
   const [isPrompting, setIsPrompting] = useState(true);
   const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
+  const [availableMonths, setAvailableMonths] = useState<number[]>([]);
+  const [reportData, setReportData] = useState<FeelingResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const currentYear = new Date().getFullYear();
+  const selectedMonthLabel = selectedMonth ? months[selectedMonth - 1] : null;
+  const chartMonthLabel = selectedMonthLabel
+    ? selectedMonthLabel.slice(0, 3)
+    : "";
+  const chartData = reportData?.sentimentChart?.length
+    ? reportData.sentimentChart.map((item) => ({
+        ...item,
+        month: chartMonthLabel,
+      }))
+    : [];
+
+  const normalizedScore = Math.min(
+    1,
+    Math.max(0, reportData?.mediaSentimento?.nota ?? 0),
+  );
+  const filledHearts = Math.round(normalizedScore * 5);
+
+  const handleGenerateReport = async () => {
+    if (!selectedMonth || isLoading) return;
+
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const response = await apiFetch<FeelingResponse>(
+        `/feeling?ano=${currentYear}&mes=${selectedMonth}`,
+        { baseUrl: apiBaseUrl },
+      );
+      setReportData(response);
+      setIsPrompting(false);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Nao foi possivel gerar o relatorio.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const loadAvailableMonths = async () => {
+      try {
+        const response = await apiFetch<AvaliacoesResponse>(
+          "/avaliacoes?page=0&size=200",
+          { baseUrl: apiBaseUrl },
+        );
+
+        const monthSet = new Set<number>();
+
+        response.content.forEach((item) => {
+          if (!item.data) return;
+
+          const parts = item.data.split("-");
+          const month = Number(parts[1]);
+
+          if (!Number.isNaN(month)) {
+            monthSet.add(month);
+          }
+        });
+
+        const monthsSorted = Array.from(monthSet.values()).sort(
+          (a, b) => a - b,
+        );
+        setAvailableMonths(monthsSorted);
+
+        if (!selectedMonth && monthsSorted.length) {
+          setSelectedMonth(monthsSorted[0]);
+        }
+      } catch {
+        setAvailableMonths([]);
+      }
+    };
+
+    void loadAvailableMonths();
+  }, [apiBaseUrl, selectedMonth]);
 
   return (
     <main className="flex w-full justify-center">
@@ -65,28 +186,44 @@ export default function Page() {
                 </p>
               </div>
               <div className="flex flex-col w-full max-w-64 justify-center align-center gap-2">
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione um mês" />
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectGroup>
-                    <SelectLabel>Meses disponiveis</SelectLabel>
-                    {months.map((month) => (
-                      <SelectItem key={month} value={month}>
-                        {month}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Button
-                size="lg"
-                className="bg-linear-[90deg,#9c89b8_0%,#beb3d2_10%,#9c89b8_100%] bg-size-[200%,100%] text-white LoadingText cursor-pointer"
-                onClick={() => setIsPrompting(false)}
-              >
-                Gerar relatório <Astroid />
-              </Button>
+                <Select
+                  value={selectedMonth ? `${selectedMonth}` : ""}
+                  onValueChange={(value) =>
+                    setSelectedMonth(value ? Number(value) : null)
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione um mês" />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    <SelectGroup>
+                      <SelectLabel>Meses disponiveis</SelectLabel>
+                      {availableMonths.length ? (
+                        availableMonths.map((monthNumber) => (
+                          <SelectItem
+                            key={monthNumber}
+                            value={`${monthNumber}`}
+                          >
+                            {months[monthNumber - 1]}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectLabel>Nenhum mes disponivel</SelectLabel>
+                      )}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <Button
+                  size="lg"
+                  disabled={!selectedMonth || isLoading}
+                  className="bg-linear-[90deg,#9c89b8_0%,#beb3d2_10%,#9c89b8_100%] bg-size-[200%,100%] text-white LoadingText cursor-pointer"
+                  onClick={handleGenerateReport}
+                >
+                  {isLoading ? "Gerando..." : "Gerar relatório"} <Astroid />
+                </Button>
+                {errorMessage ? (
+                  <p className="text-sm text-red-500">{errorMessage}</p>
+                ) : null}
               </div>
             </div>
           </>
@@ -94,7 +231,9 @@ export default function Page() {
           <>
             <section className="flex w-full justify-center">
               <div className="inline-flex items-center gap-2 text-center">
-                <h1 className="text-3xl font-semibold">Relatório DATE</h1>
+                <h1 className="text-3xl font-semibold">
+                  Relatório {selectedMonthLabel} {currentYear}
+                </h1>
                 <div
                   className="relative"
                   onMouseEnter={() => setIsDisclaimerOpen(true)}
@@ -126,12 +265,7 @@ export default function Page() {
               </div>
             </section>
             <section className="my-4 text-center" aria-label="Conteudo">
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel
-                officiis omnis commodi tempora sequi, aut quia recusandae nemo
-                temporibus perspiciatis est nihil eius id repellendus accusamus
-                autem possimus incidunt veritatis!
-              </p>
+              <p>{reportData?.resumo?.descricao}</p>
             </section>
             <Separator />
             <section className="my-4" aria-label="Visao geral">
@@ -148,7 +282,7 @@ export default function Page() {
                 config={sentimentChartConfig}
                 className="mt-4 h-72 w-full"
               >
-                <BarChart data={sentimentData} margin={{ left: 12, right: 12 }}>
+                <BarChart data={chartData} margin={{ left: 12, right: 12 }}>
                   <CartesianGrid vertical={false} />
                   <XAxis
                     dataKey="month"
@@ -190,11 +324,14 @@ export default function Page() {
                 </p>
               </div>
               <div className="inline-flex items-center justify-center w-full py-4 gap-1 ">
-                <Heart className="fill-red-500 stroke-0" />
-                <Heart className="fill-red-500 stroke-0" />
-                <Heart className="fill-red-500 stroke-0" />
-                <Heart className="fill-red-500 stroke-0" />
-                <Heart />
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <Heart
+                    key={index}
+                    className={
+                      index < filledHearts ? "fill-red-500 stroke-0" : undefined
+                    }
+                  />
+                ))}
               </div>
             </section>
             <Separator />
@@ -205,8 +342,47 @@ export default function Page() {
                   Nota média dos sentimentos das avaliações.
                 </p>
               </div>
-              <div className="inline-flex items-center justify-center w-full py-4 gap-1 ">
-                {/* Colocar Card aqui */}
+              <div className="grid w-full grid-cols-1 gap-4 py-4 md:grid-cols-2">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="text-sm font-semibold text-muted-foreground">
+                    Melhor produto
+                  </h3>
+                  <p className="text-lg font-semibold">
+                    {reportData?.melhorProduto?.nome}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {reportData?.melhorProduto?.categoria}
+                  </p>
+                  <p className="mt-2 text-sm">
+                    Sentimento: {reportData?.melhorProduto?.sentimento}
+                  </p>
+                  <p className="text-sm">
+                    Media: {reportData?.melhorProduto?.media}
+                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {reportData?.melhorProduto?.comentarioDestaque}
+                  </p>
+                </div>
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="text-sm font-semibold text-muted-foreground">
+                    Pior produto
+                  </h3>
+                  <p className="text-lg font-semibold">
+                    {reportData?.piorProduto?.nome}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {reportData?.piorProduto?.categoria}
+                  </p>
+                  <p className="mt-2 text-sm">
+                    Sentimento: {reportData?.piorProduto?.sentimento}
+                  </p>
+                  <p className="text-sm">
+                    Media: {reportData?.piorProduto?.media}
+                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {reportData?.piorProduto?.comentarioDestaque}
+                  </p>
+                </div>
               </div>
             </section>
             <Separator />
@@ -230,22 +406,20 @@ export default function Page() {
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    <tr>
-                      <td className="px-4 py-2">Entrega</td>
-                      <td className="px-4 py-2">Negativo</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2">Qualidade</td>
-                      <td className="px-4 py-2">Positivo</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2">Preco</td>
-                      <td className="px-4 py-2">Neutro</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2">Atendimento</td>
-                      <td className="px-4 py-2">Positivo</td>
-                    </tr>
+                    {reportData?.aspectos?.length ? (
+                      reportData.aspectos.map((aspecto) => (
+                        <tr key={`${aspecto.aspecto}-${aspecto.sentimento}`}>
+                          <td className="px-4 py-2">{aspecto.aspecto}</td>
+                          <td className="px-4 py-2">{aspecto.sentimento}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td className="px-4 py-2" colSpan={2}>
+                          Nenhum aspecto encontrado.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>

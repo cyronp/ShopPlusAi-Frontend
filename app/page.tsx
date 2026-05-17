@@ -4,6 +4,8 @@ import Card from "./components/card";
 import Footer from "./components/footer";
 
 export default function Home() {
+  
+
   return (
     <>
       <div className="flex min-h-full flex-col">

@@ -14,6 +14,27 @@ import {
   isSpeechRecognitionSupported,
   SpeechToText,
 } from "../utils/speech-to-text";
+import { apiFetch } from "../lib/api";
+
+type ChatApiMessage = {
+  id: number;
+  conversationId: string;
+  role: "USER" | "ASSISTANT" | "SYSTEM";
+  content: string;
+  createdAt: string;
+};
+
+type ChatMessage = {
+  id?: number;
+  role: "user" | "assistant";
+  text: string;
+  isNew?: boolean;
+};
+
+type CustomPromptProps = {
+  activeConversationId?: string | null;
+  onConversationChange?: (id: string | null) => void;
+};
 
 const textMapping = [
   "Quais os meus melhores itens?",
@@ -23,12 +44,18 @@ const textMapping = [
   "Faça um resumo das minhas vendas do mês.",
 ];
 
-export default function CustomPrompt() {
+export default function CustomPrompt({
+  activeConversationId = null,
+  onConversationChange,
+}: CustomPromptProps) {
+  const chatBaseUrl =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
   const [hintText, setHintText] = useState(textMapping[0]);
   const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState<
-    { role: "user" | "assistant"; text: string }[]
-  >([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [conversationId, setConversationId] = useState<string | null>(
+    activeConversationId,
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
@@ -36,6 +63,96 @@ export default function CustomPrompt() {
   const indexRef = useRef(0);
   const sttRef = useRef<SpeechToText | null>(null);
   const baseInputRef = useRef("");
+
+  const loadConversation = async (targetId: string) => {
+    const data = await apiFetch<ChatApiMessage[]>(`/chat/${targetId}`, {
+      baseUrl: chatBaseUrl,
+    });
+    const normalized: ChatMessage[] = data.map((message) => {
+      const role: ChatMessage["role"] =
+        message.role === "USER" ? "user" : "assistant";
+
+      return {
+        id: message.id,
+        role,
+        text: message.content,
+        isNew: false,
+      };
+    });
+    setMessages(normalized);
+  };
+
+  const replacePendingAssistant = (text: string) => {
+    setMessages((prev) => {
+      const next = [...prev];
+
+      for (let i = next.length - 1; i >= 0; i -= 1) {
+        if (next[i].role === "assistant" && next[i].text === "") {
+          next[i] = { ...next[i], text, isNew: true };
+          return next;
+        }
+      }
+
+      return [...next, { role: "assistant", text, isNew: true }];
+    });
+  };
+
+  const handleSend = async () => {
+    const messageText = inputValue.trim();
+
+    if (!messageText || isLoading) return;
+
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", text: messageText, isNew: false },
+      { role: "assistant", text: "", isNew: true },
+    ]);
+    setInputValue("");
+    setIsLoading(true);
+
+    try {
+      const payload: {
+        question: string;
+        usuarioId: number;
+        conversationId?: string;
+      } = {
+        question: messageText,
+        usuarioId: 1,
+      };
+
+      if (conversationId) {
+        payload.conversationId = conversationId;
+      }
+
+      const response = await apiFetch<ChatApiMessage>("/chat", {
+        baseUrl: chatBaseUrl,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.conversationId) {
+        if (response.conversationId !== conversationId) {
+          setConversationId(response.conversationId);
+          onConversationChange?.(response.conversationId);
+        }
+        await loadConversation(response.conversationId);
+      } else if (response.content) {
+        replacePendingAssistant(response.content);
+      }
+    } catch (error) {
+      const fallbackMessage =
+        error instanceof Error
+          ? error.message
+          : "Nao foi possivel enviar a mensagem agora.";
+
+      replacePendingAssistant(fallbackMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -45,6 +162,19 @@ export default function CustomPrompt() {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    if (activeConversationId === conversationId) return;
+
+    setConversationId(activeConversationId);
+
+    if (activeConversationId) {
+      void loadConversation(activeConversationId);
+      return;
+    }
+
+    setMessages([]);
+  }, [activeConversationId, conversationId]);
 
   useEffect(() => {
     const supported = isSpeechRecognitionSupported();
@@ -118,7 +248,7 @@ export default function CustomPrompt() {
                         <p className="text-sm bg-linear-[90deg,#525252_0%,#bababa_10%,#525252_100%] bg-size-[200%,100%] text-transparent bg-clip-text LoadingText">
                           Sumarizando...
                         </p>
-                      ) : message.text ? (
+                      ) : message.text && message.isNew ? (
                         <Typewriter
                           options={{
                             delay: 15,
@@ -129,7 +259,7 @@ export default function CustomPrompt() {
                           }}
                         />
                       ) : (
-                        <></>
+                        <p>{message.text}</p>
                       )
                     ) : (
                       <p>{message.text}</p>
@@ -159,33 +289,7 @@ export default function CustomPrompt() {
               className="ml-auto text-white bg-amethyst-smoke-700 cursor-pointer"
               size="sm"
               variant="outline"
-              onClick={() => {
-                const messageText = inputValue.trim();
-
-                if (!messageText) return;
-
-                const responseText =
-                  "Recebi sua mensagem. Vou analisar e te responder com os melhores insights para sua loja.";
-
-                setMessages((prev) => [
-                  ...prev,
-                  { role: "user", text: messageText },
-                  { role: "assistant", text: "" },
-                ]);
-                setInputValue("");
-                setIsLoading(true);
-
-                setTimeout(() => {
-                  setMessages((prev) =>
-                    prev.map((m) =>
-                      m.role === "assistant" && m.text === ""
-                        ? { ...m, text: responseText }
-                        : m,
-                    ),
-                  );
-                  setIsLoading(false);
-                }, 10000);
-              }}
+              onClick={handleSend}
             >
               Enviar
             </InputGroupButton>

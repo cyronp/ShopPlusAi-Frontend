@@ -7,11 +7,39 @@ import UserModal from "./ai-modal";
 import { Input } from "./ui/input";
 import { cn } from "@/app/lib/utils";
 import SearchInput from "./search";
+import type { Category, CategoryResponse } from "@/app/types/category";
+import { apiFetch } from "@/app/lib/api";
+
+const ALL_CATEGORIES_LABEL = "Todos";
 
 export default function Header() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [isActive, setIsActive] = useState(0);
+  const [isActive, setIsActive] = useState<string>(ALL_CATEGORIES_LABEL);
+  const [categories, setCategories] = useState<Category[]>([]);
   const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    apiFetch<CategoryResponse | Category[]>("/api/categoria")
+      .then((data) => {
+        if (!isMounted) {
+          return;
+        }
+
+        const list = Array.isArray(data) ? data : data.content;
+        setCategories(list);
+      })
+      .catch(() => {
+        if (isMounted) {
+          setCategories([]);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const updateHeaderHeight = () => {
@@ -29,7 +57,6 @@ export default function Header() {
     return () => window.removeEventListener("resize", updateHeaderHeight);
   }, []);
 
-  const categories = ["Todos", "Roupas", "Bebidas", "Alimentos", "Automotivo"];
   return (
     <>
       <header
@@ -47,18 +74,29 @@ export default function Header() {
         {/* Categories */}
         <nav className="flex justify-center">
           <ul className="inline-flex gap-6 cursor-pointer *:hover:bg-neutral-100 transition-all *:p-1 *:rounded-md">
-            {categories.map((category, index) => (
+            <li
+              className={cn(
+                "tracking-tight text-amethyst-smoke-600",
+                isActive === ALL_CATEGORIES_LABEL
+                  ? "text-amethyst-smoke-900 underline decoration-2 decoration-amethyst-smoke-900 font-semibold underline-offset-6"
+                  : "",
+              )}
+              onClick={() => setIsActive(ALL_CATEGORIES_LABEL)}
+            >
+              {ALL_CATEGORIES_LABEL}
+            </li>
+            {categories.map((category) => (
               <li
-                key={index}
+                key={category.id ?? category.nome}
                 className={cn(
                   "tracking-tight text-amethyst-smoke-600",
-                  isActive === index
+                  isActive === category.nome
                     ? "text-amethyst-smoke-900 underline decoration-2 decoration-amethyst-smoke-900 font-semibold underline-offset-6"
                     : "",
                 )}
-                onClick={() => setIsActive(index)}
+                onClick={() => setIsActive(category.nome)}
               >
-                {category}
+                {category.nome}
               </li>
             ))}
           </ul>
