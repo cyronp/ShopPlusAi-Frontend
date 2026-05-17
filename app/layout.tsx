@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
+import { CategoryFilterProvider } from "./components/category-filter-context";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -21,13 +22,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${figtree.variable} h-full antialiased`}>
       <body className="bg-background flex min-h-screen flex-col">
-        <Header />
-        <main
-          className="flex flex-1 flex-col"
-          style={{ paddingTop: "var(--header-height, 0px)" }}
-        >
-          {children}
-        </main>
+        <CategoryFilterProvider>
+          <Header />
+          <main
+            className="flex flex-1 flex-col"
+            style={{ paddingTop: "var(--header-height, 0px)" }}
+          >
+            {children}
+          </main>
+        </CategoryFilterProvider>
       </body>
     </html>
   );

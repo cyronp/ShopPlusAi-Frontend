@@ -9,12 +9,14 @@ import { cn } from "@/app/lib/utils";
 import SearchInput from "./search";
 import type { Category, CategoryResponse } from "@/app/types/category";
 import { apiFetch } from "@/app/lib/api";
-
-const ALL_CATEGORIES_LABEL = "Todos";
+import {
+  ALL_CATEGORIES_LABEL,
+  useCategoryFilter,
+} from "./category-filter-context";
 
 export default function Header() {
+  const { activeCategory, setActiveCategory } = useCategoryFilter();
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [isActive, setIsActive] = useState<string>(ALL_CATEGORIES_LABEL);
   const [categories, setCategories] = useState<Category[]>([]);
   const headerRef = useRef<HTMLElement>(null);
 
@@ -77,11 +79,11 @@ export default function Header() {
             <li
               className={cn(
                 "tracking-tight text-amethyst-smoke-600",
-                isActive === ALL_CATEGORIES_LABEL
+                activeCategory === ALL_CATEGORIES_LABEL
                   ? "text-amethyst-smoke-900 underline decoration-2 decoration-amethyst-smoke-900 font-semibold underline-offset-6"
                   : "",
               )}
-              onClick={() => setIsActive(ALL_CATEGORIES_LABEL)}
+              onClick={() => setActiveCategory(ALL_CATEGORIES_LABEL)}
             >
               {ALL_CATEGORIES_LABEL}
             </li>
@@ -90,11 +92,11 @@ export default function Header() {
                 key={category.id ?? category.nome}
                 className={cn(
                   "tracking-tight text-amethyst-smoke-600",
-                  isActive === category.nome
+                  activeCategory === category.nome
                     ? "text-amethyst-smoke-900 underline decoration-2 decoration-amethyst-smoke-900 font-semibold underline-offset-6"
                     : "",
                 )}
-                onClick={() => setIsActive(category.nome)}
+                onClick={() => setActiveCategory(category.nome)}
               >
                 {category.nome}
               </li>
