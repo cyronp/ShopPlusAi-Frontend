@@ -105,7 +105,6 @@ export default function Header() {
         </nav>
         {/* Admin Section */}
         <div className="flex justify-end px-12 gap-6">
-          <SearchInput />
           <Button
             variant="ghost"
             size="lg"
