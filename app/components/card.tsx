@@ -25,18 +25,32 @@ export default function Card({
 
   return (
     <>
-      <div className="rounded-xl border bg-white p-4">
-        <div className="flex flex-col gap-1">
-          <img width={300} height={300} src={image} />
-          <Separator className="my-2" />
-          <h2 className="text-lg font-semibold">{name}</h2>
-          <h3 className="text-sm text-muted-foreground">
-            Categoria: {category}
-          </h3>
-          <div className="flex flex-row items-center justify-between">
-            <p>R${preco}</p>
+      <div className="relative overflow-hidden rounded-2xl border border-neutral-200/80 bg-white">
+        <div className="absolute inset-x-0 top-0 h-24 from-amethyst-smoke-50 to-transparent" />
+        <div className="relative flex flex-col gap-3 p-4">
+          <div className="relative overflow-hidden rounded-xl bg-neutral-100">
+            <img
+              width={300}
+              height={300}
+              src={image}
+              className="h-48 w-full object-cover"
+            />
+          </div>
+          <Separator className="my-1" />
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold text-neutral-900">{name}</h2>
+            <p className="text-sm tracking-wide text-neutral-500">
+              Categoria: {category}
+            </p>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-semibold text-neutral-900">
+                R${preco}
+              </span>
+            </div>
             <Button
-              className="bg-amethyst-smoke-500 p-4 cursor-pointer"
+              className="bg-amethyst-smoke-700 px-4 py-2 text-sm text-white transition-colors hover:bg-amethyst-smoke-800 cursor-pointer"
               onClick={() => setIsReviewsOpen(true)}
             >
               Avaliações

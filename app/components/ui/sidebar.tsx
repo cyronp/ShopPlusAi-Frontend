@@ -22,7 +22,7 @@ export default function Sidebar({
       <nav className="flex flex-col gap-1 p-4" aria-label="Recentes">
         <Button
           type="button"
-          className="mb-2 w-full justify-center bg-amethyst-smoke-500"
+          className="mb-2 w-full justify-center bg-amethyst-smoke-500 cursor-pointer"
           onClick={onNewChat}
         >
           Novo chat
