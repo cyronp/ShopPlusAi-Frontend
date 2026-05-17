@@ -64,7 +64,10 @@ export default function CustomPrompt({
   const sttRef = useRef<SpeechToText | null>(null);
   const baseInputRef = useRef("");
 
-  const loadConversation = async (targetId: string) => {
+  const loadConversation = async (
+    targetId: string,
+    highlightMessageId?: number,
+  ) => {
     const data = await apiFetch<ChatApiMessage[]>(`/chat/${targetId}`, {
       baseUrl: chatBaseUrl,
     });
@@ -76,7 +79,7 @@ export default function CustomPrompt({
         id: message.id,
         role,
         text: message.content,
-        isNew: false,
+        isNew: highlightMessageId === message.id && role === "assistant",
       };
     });
     setMessages(normalized);
@@ -138,7 +141,7 @@ export default function CustomPrompt({
           setConversationId(response.conversationId);
           onConversationChange?.(response.conversationId);
         }
-        await loadConversation(response.conversationId);
+        await loadConversation(response.conversationId, response.id);
       } else if (response.content) {
         replacePendingAssistant(response.content);
       }

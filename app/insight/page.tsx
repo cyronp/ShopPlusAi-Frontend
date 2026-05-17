@@ -139,7 +139,7 @@ export default function Page() {
     const loadAvailableMonths = async () => {
       try {
         const response = await apiFetch<AvaliacoesResponse>(
-          "/avaliacoes?page=0&size=200",
+          "/avaliacoes",
           { baseUrl: apiBaseUrl },
         );
 
