@@ -2,7 +2,7 @@ import { ArrowUpRight, Sparkles } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="fixed bottom-0 left-0 z-30 w-full border-t-2 border-amethyst-smoke-400 bg-amethyst-smoke-300">
+    <footer className="bottom-0 left-0 z-30 w-full border-t-2 border-amethyst-smoke-400 bg-amethyst-smoke-300">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-8 py-10">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr]">
           <div className="flex flex-col gap-4">
