@@ -22,7 +22,7 @@ Anteriormente focado em revolucionar a experiência de e-commerce, o **ShopPlusA
 
 <details>
 <summary> Funcionalidades Principais</summary>
-<br>
+
 * **Vitrine Inteligente:** Exibição de produtos de forma dinâmica.
 * **Integração com IA:** Interface preparada para exibir recomendações inteligentes e personalizadas com base no comportamento do usuário.
 * **Busca Semântica/Preditiva:** Barra de pesquisa intuitiva integrada com serviços inteligentes.
