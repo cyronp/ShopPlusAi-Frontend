@@ -5,7 +5,7 @@ Anteriormente focado em revolucionar a experiência de e-commerce, o **ShopPlusA
 ---
 
 <details>
-<summary>👥 Equipe e Contatos</summary>
+<summary> Equipe e Contatos</summary>
 
 ## Alunos
 | Equipe | Email |
@@ -21,8 +21,8 @@ Anteriormente focado em revolucionar a experiência de e-commerce, o **ShopPlusA
 ---
 
 <details>
-<summary>🚀 Funcionalidades Principais</summary>
-
+<summary> Funcionalidades Principais</summary>
+<br>
 * **Vitrine Inteligente:** Exibição de produtos de forma dinâmica.
 * **Integração com IA:** Interface preparada para exibir recomendações inteligentes e personalizadas com base no comportamento do usuário.
 * **Busca Semântica/Preditiva:** Barra de pesquisa intuitiva integrada com serviços inteligentes.
@@ -36,7 +36,6 @@ Anteriormente focado em revolucionar a experiência de e-commerce, o **ShopPlusA
 <details>
 <summary> Tecnologias Utilizadas</summary>
 
-*(Nota: Altere/marque as caixas abaixo conforme a stack real que vocês utilizaram no frontend!)*
 
 * [X] **JavaScript (ES6+)** / **TypeScript**
 * [X] **Next.js**
@@ -48,7 +47,7 @@ Anteriormente focado em revolucionar a experiência de e-commerce, o **ShopPlusA
 ---
 
 <details>
-<summary>📦 Como Executar o Projeto Localmente</summary>
+<summary> Como Executar o Projeto Localmente</summary>
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
