@@ -63,7 +63,7 @@ export default function Header() {
     <>
       <header
         ref={headerRef}
-        className="fixed top-0 left-0 z-40 grid w-full grid-cols-3 items-center border-b bg-background py-4"
+        className="inline-flex justify-between fixed top-0 left-0 z-40 w-full items-center border-b bg-background py-4"
       >
         {/* Icon */}
         <div className="flex px-12">
