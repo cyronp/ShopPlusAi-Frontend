@@ -28,12 +28,12 @@ export default function Card({
       <div className="relative overflow-hidden rounded-2xl border border-neutral-200/80 bg-white">
         <div className="absolute inset-x-0 top-0 h-24 from-amethyst-smoke-50 to-transparent" />
         <div className="relative flex flex-col gap-3 p-4">
-          <div className="relative overflow-hidden rounded-xl bg-neutral-100">
+          <div className="relative overflow-hidden rounded-xl bg-transparent">
             <img
               width={300}
               height={300}
               src={image}
-              className="h-48 w-full object-cover"
+              className="h-48 w-full object-contain"
             />
           </div>
           <Separator className="my-1" />
