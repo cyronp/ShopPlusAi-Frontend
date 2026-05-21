@@ -172,6 +172,8 @@ export default function Page() {
     void loadAvailableMonths();
   }, [apiBaseUrl, selectedMonth]);
 
+  console.log(reportData)
+
   return (
     <main className="flex w-full justify-center">
       <div className="w-full max-w-5xl py-4">
@@ -324,7 +326,7 @@ export default function Page() {
                 </p>
               </div>
               <div className="inline-flex items-center justify-center w-full py-4 gap-1 ">
-                {Array.from({ length: 5 }).map((_, index) => (
+                {Array.from({ length: Math.ceil(reportData?.mediaSentimento?.nota ?? 0) }).map((_, index) => (
                   <Heart
                     key={index}
                     className={

@@ -18,6 +18,7 @@ type Product = {
     id: number;
     nome: string;
   };
+  image: string;
 };
 
 type ProductPage = {
@@ -92,7 +93,7 @@ export default function Home() {
                     name={product.nome}
                     category={product.categoria.nome}
                     preco={product.preco}
-                    image={`https://picsum.photos/seed/${product.id}300/300`}
+                    image={product.image}
                   />
                 ))
               )}
