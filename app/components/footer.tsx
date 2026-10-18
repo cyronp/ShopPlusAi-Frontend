@@ -17,9 +17,9 @@ export default function Footer() {
             <div className="flex flex-wrap gap-3 text-xs uppercase tracking-wider text-amethyst-smoke-700">
               <span>Vitor Henrique</span>
               <span>Caio de Souza</span>
+              <span>Samuel de Souza</span>
               <span>Mathias Gruber</span>
               <span>Carlos Deretti</span>
-              <span>Samuel de Souza</span>
             </div>
           </div>
           <div className="grid gap-8 sm:grid-cols-2">
